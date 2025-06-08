@@ -830,7 +830,7 @@ class SAM2Base(torch.nn.Module):
         # The previously predicted SAM mask logits (which can be fed together with new clicks in demo).
         prev_sam_mask_logits=None,
     ):
-        current_out, sam_outputs, _, _ = self._track_step(
+        current_out, sam_outputs, pix_feats, _ = self._track_step(
             frame_idx,
             is_init_cond_frame,
             current_vision_feats,
@@ -856,6 +856,7 @@ class SAM2Base(torch.nn.Module):
 
         current_out["pred_masks"] = low_res_masks
         current_out["pred_masks_high_res"] = high_res_masks
+        current_out["pix_feats"] = pix_feats
         current_out["obj_ptr"] = obj_ptr
         if not self.training:
             # Only add this in inference (to avoid unused param in activation checkpointing;
