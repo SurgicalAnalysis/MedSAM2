@@ -746,7 +746,7 @@ class SAM2VideoPredictorNPZ(SAM2Base):
             _, video_res_masks = self._get_orig_video_res_output(
                 inference_state, pred_masks
             )
-            yield frame_idx, obj_ids, video_res_masks
+            yield frame_idx, obj_ids, video_res_masks, current_out["pix_feats"]
 
     def _add_output_per_object(
         self, inference_state, frame_idx, current_out, storage_key
@@ -971,6 +971,10 @@ class SAM2VideoPredictorNPZ(SAM2Base):
         # object pointer is a small tensor, so we always keep it on GPU memory for fast access
         obj_ptr = current_out["obj_ptr"]
         object_score_logits = current_out["object_score_logits"]
+
+        # image embeddings from encoder for current frame w/ memory from prev frames
+        pix_feats = current_out["pix_feats"]
+
         # make a compact version of this frame's output to reduce the state size
         compact_current_out = {
             "maskmem_features": maskmem_features,
@@ -978,6 +982,7 @@ class SAM2VideoPredictorNPZ(SAM2Base):
             "pred_masks": pred_masks,
             "obj_ptr": obj_ptr,
             "object_score_logits": object_score_logits,
+            "pix_feats": pix_feats
         }
         return compact_current_out, pred_masks_gpu
 
