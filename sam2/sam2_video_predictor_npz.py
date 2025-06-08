@@ -710,6 +710,7 @@ class SAM2VideoPredictorNPZ(SAM2Base):
             # batched forward on them via `_run_single_frame_inference` because the
             # number of clicks on each object might be different.
             if frame_idx in consolidated_frame_inds["cond_frame_outputs"]:
+                print("Skipping computing frame", frame_idx, "as it has consolidated outputs.")
                 storage_key = "cond_frame_outputs"
                 current_out = output_dict[storage_key][frame_idx]
                 pred_masks = current_out["pred_masks"]
@@ -717,10 +718,12 @@ class SAM2VideoPredictorNPZ(SAM2Base):
                     # clear non-conditioning memory of the surrounding frames
                     self._clear_non_cond_mem_around_input(inference_state, frame_idx)
             elif frame_idx in consolidated_frame_inds["non_cond_frame_outputs"]:
+                print("Skipping computing frame", frame_idx, "as it has non cond outputs.")
                 storage_key = "non_cond_frame_outputs"
                 current_out = output_dict[storage_key][frame_idx]
                 pred_masks = current_out["pred_masks"]
             else:
+                print("computing frame", frame_idx)
                 storage_key = "non_cond_frame_outputs"
                 current_out, pred_masks = self._run_single_frame_inference(
                     inference_state=inference_state,
@@ -975,7 +978,6 @@ class SAM2VideoPredictorNPZ(SAM2Base):
 
         # image embeddings from encoder for current frame w/ memory from prev frames
         pix_feats = current_out["pix_feats"]
-        print("this is pix_feats ", pix_feats)
 
         # make a compact version of this frame's output to reduce the state size
         compact_current_out = {
