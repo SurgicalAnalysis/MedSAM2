@@ -747,9 +747,6 @@ class SAM2VideoPredictorNPZ(SAM2Base):
                 inference_state, pred_masks
             )
 
-            print("hi")
-            print(current_out)
-
             yield frame_idx, obj_ids, video_res_masks, current_out
 
     def _add_output_per_object(
