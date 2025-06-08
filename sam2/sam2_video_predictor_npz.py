@@ -975,7 +975,7 @@ class SAM2VideoPredictorNPZ(SAM2Base):
 
         # image embeddings from encoder for current frame w/ memory from prev frames
         pix_feats = current_out["pix_feats"]
-        print("this is pix_feats ", pix_feats.shape)
+        print("this is pix_feats ", pix_feats)
 
         # make a compact version of this frame's output to reduce the state size
         compact_current_out = {
