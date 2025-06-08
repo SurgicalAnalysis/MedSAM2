@@ -746,7 +746,11 @@ class SAM2VideoPredictorNPZ(SAM2Base):
             _, video_res_masks = self._get_orig_video_res_output(
                 inference_state, pred_masks
             )
-            yield frame_idx, obj_ids, video_res_masks, current_out["pix_feats"]
+
+            print("hi")
+            print(current_out)
+
+            yield frame_idx, obj_ids, video_res_masks, current_out
 
     def _add_output_per_object(
         self, inference_state, frame_idx, current_out, storage_key
@@ -982,7 +986,8 @@ class SAM2VideoPredictorNPZ(SAM2Base):
             "pred_masks": pred_masks,
             "obj_ptr": obj_ptr,
             "object_score_logits": object_score_logits,
-            "pix_feats": pix_feats
+            "pix_feats": pix_feats,
+            "img_embeddings": (current_vision_feats, current_vision_pos_embeds),
         }
         return compact_current_out, pred_masks_gpu
 
